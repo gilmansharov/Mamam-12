@@ -1,9 +1,24 @@
- 
+/*
+ * @author: Gil Mansharov
+ * @ID: 313260192
+ */
+
+
 /**
  * This class represents a Date object
  */
 public class Date
 {
+	/**
+	 * month Value as Constant integer
+	 */
+	private final int JANUARY = 1, FEBRUARY = 2, MARCH = 3, APRIL = 4, JUNE = 6,
+			SEPTEMBER = 9, NOVEMBER = 11, DECEMBER = 12;
+	//private final int MAY = 5, JULY = 7, AUGUST = 8, OCTOBER = 10		// these months aren't in use and that's the reason they were commented out 
+	private final int MAX_YEARS = 10000, MIN_YEARS = 1000;
+	private final int DEFAULT_YEAR = 2000;
+	private final int LEAP_FEB = 29, NON_LEAP_FEB = 28, MONTH_WITH_30_DAYS = 30, MAX_DAYS_IN_MONTH = 31, MIN_DAYS_IN_MONTH = 1;
+	
     /**
      * Day of the Date object
      */
@@ -25,36 +40,18 @@ public class Date
     */
     public Date(int day, int month, int year)
     {
-        if (year >= 10000 || year < 1000 || day < 0 || day > 31 || month < 1 || month > 12)
-        {
-            this._day = 1;
-            this._month = 1;
-            this._year = 2000;
-        }
-        else if (month == 2 && day > 28 && (year%4!=0 || year%100==0))
-        {
-            this._day = 1;
-            this._month = 1;
-            this._year = 2000;
-        }
-        else if (((year%4==0 && year%100!=0) || year%400==0) && month==2 && day > 29)
-        {
-            this._day = 1;
-            this._month = 1;
-            this._year = 2000;
-        }
-        else if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
-        {
-            this._day = 1;
-            this._month = 1;
-            this._year = 2000;
-        }
-        else
-        {
-            this._day = day;
-            this._month = month;
-            this._year = year;
-        }
+    	if (isValid(day, month, year))
+    	{
+    		this._day = day;
+    		this._month = month;
+    		this._year = year;
+    	}
+    	else
+    	{
+    		this._day = MIN_DAYS_IN_MONTH;
+    		this._month = JANUARY;
+    		this._year = DEFAULT_YEAR;
+    	}
     }
 
     /**
@@ -101,22 +98,8 @@ public class Date
      */
     public void setDay(int dayToSet)
     {
-        if (dayToSet > 0 && dayToSet <= 31)
-        {
-            if (_month == 2)
-            {
-                if ((_year % 4 == 0 && _year % 100 != 0) || (_year % 400 == 0))
-                    this._day = (dayToSet <= 29) ? dayToSet : this._day;
-                else
-                    this._day = (dayToSet <= 28) ? dayToSet : this._day;
-            }
-        
-            else if (_month == 4 || _month == 6 || _month == 9 || _month == 11)
-                this._day = (dayToSet <= 30) ? dayToSet : this._day;
-        
-            else
-                this._day = (dayToSet <= 31) ? dayToSet : this._day;
-        }
+    	if (isValid(dayToSet, this._month, this._year))
+    		this._day = dayToSet;
     }
     
     /**
@@ -125,22 +108,8 @@ public class Date
      */
     public void setMonth(int monthToSet)
     {
-        if (monthToSet <= 31 && monthToSet > 0)
-        {
-            if (monthToSet == 2)
-            {
-                if ((_year % 4 == 0 && _year % 100 != 0) || (_year % 400 == 0))
-                    this._month = (_day <= 29) ? monthToSet : this._month;
-                else
-                    this._month = (_day <= 28) ? monthToSet : this._month;
-            }
-        
-            else if (monthToSet == 4 || monthToSet == 6 || monthToSet == 9 || monthToSet == 11)
-                this._month = (_day <= 30) ? monthToSet : this._month;
-        
-            else
-                this._month = monthToSet;
-        }
+        if (isValid(this._day, monthToSet, this._year))
+        	this._month = monthToSet;
     }
     
     /**
@@ -149,19 +118,8 @@ public class Date
      */
     public void setYear(int yearToSet)
     {
-        if (yearToSet >= 1000 && yearToSet < 10000)
-        {
-            if (_month == 2)
-            {
-                if ((yearToSet % 4 == 0 && yearToSet % 100 != 0) || (yearToSet % 400 == 0))
-                    this._year = yearToSet;
-                else
-                    this._year = (_day <= 28) ? yearToSet : this._year;
-            }
-        
-            else
-                this._year = yearToSet;
-        }
+        if (isValid(this._day, this._month, yearToSet))
+        	this._year = yearToSet;
     }
     
     /**
@@ -186,11 +144,11 @@ public class Date
         {
             if (this._month == other._month)
             {
-                return (this._day == other._day || this._day > other._day);
+                return this._day < other._day;
             }
             return (this._month < other._month);
         }
-        return (this    ._year < other._year);
+        return (this._year < other._year);
     }
     
     /**
@@ -222,10 +180,10 @@ public class Date
      */
     private int calculateDay(int day, int month, int year)
     {
-        if (month < 3)
+        if (month < MARCH)
         {
             year--;
-            month += 12;
+            month += DECEMBER;
         }
         return 365 * year + year/4 - year/100 + year/400 + ((month+1) * 306)/10 + (day - 62);
     }
@@ -238,17 +196,49 @@ public class Date
     {
         int year = this._year;
         int m = this._month;
-        if (this._month == 1 || this._month == 2)
+        if (this._month == JANUARY || this._month == FEBRUARY)
         {
             year--;
-            m += 12;
+            m += DECEMBER;
         }
         int y = year % 100;
         int c = year / 100;
         
-        int answer = ((this._day + (26 * (m+1))/10 + y + y/4 + c/4 - 2*c) % 7);
-        return answer >= 0 ? answer : answer + 7;
+        return ((this._day + (26 * (m+1))/10 + y + y/4 + c/4 - 2*c) % 7);
     }
+    
+    /**
+     * a method that checks if the year is leap
+     * @param yearToCheck	The year to check if is leap
+     * @return true if the year is leap, otherwise, returns false
+     */
+    
+    private boolean isLeap(int yearToCheck)
+    {
+    	return (yearToCheck % 4 == 0 && yearToCheck % 100 != 0) || (yearToCheck % 400 == 0);
+    }
+    
+    /**
+     * a method that checks if a date is legal
+     * @param day the day in the date
+     * @param month the month in the date
+     * @param year the year in the date
+     * @return True if the date is Legal, otherwise return false
+     */
+    private boolean isValid(int day, int month, int year)
+    {
+        if (year >= MAX_YEARS || year < MIN_YEARS || day < MIN_DAYS_IN_MONTH || day > MAX_DAYS_IN_MONTH || month < JANUARY || month > DECEMBER)
+        	return false;
+        else if (month == FEBRUARY && day > NON_LEAP_FEB && !isLeap(year))
+        	return false;
+        else if (isLeap(year) && month == FEBRUARY && day > LEAP_FEB)
+        	return false;
+        else if ((month == APRIL || month == JUNE || month == SEPTEMBER || month == NOVEMBER) && day > MONTH_WITH_30_DAYS)
+        	return false;
+        else
+        	return true;
+    }
+    
     
     /**
      * returns a String that represents this date
@@ -256,7 +246,7 @@ public class Date
      */
     public String toString()
     {
-        return this._day + " / " + this._month + " / " + this._year;
+        return this._day + "/" + this._month + "/" + this._year;
     }
 
 }

@@ -1,4 +1,9 @@
- 
+/*
+ * @author: Gil Mansharov
+ * @ID: 313260192
+ */ 
+
+
 /**
  * This class represents a Trip object
  */
@@ -38,6 +43,12 @@ public class Trip
      */
     private final int PRICE_PER_WEEKEND = 100;
     
+    /**
+     * Travelers and Countries constants assignment
+     */
+    private final int MIN_TRAVELLERS_NUMBER = 1, MAX_TRAVELLERS_NUMBER = 50, DEFAULT_TRAVELLERS_NUMBER = 10,
+    		MIN_COUNTRIES_NUMBER = 1, MAX_COUNTRIES_NUMBER = 10;
+    
     
     /**
      * creates a new Trip object
@@ -61,8 +72,8 @@ public class Trip
             this._departureDate = new Date(1, 1, 2000);
             this._returningDate = new Date(this._departureDate);
         } 
-        this._noOfCountries = (noOfCountries > 0 && noOfCountries <= 10) ? noOfCountries : 1;
-        this._noOfTravellers = (noOfTravellers > 0 && noOfTravellers <= 50) ? noOfTravellers : 10;
+        this._noOfCountries = (noOfCountries >= MIN_COUNTRIES_NUMBER && noOfCountries <= MAX_COUNTRIES_NUMBER) ? noOfCountries : MIN_COUNTRIES_NUMBER;
+        this._noOfTravellers = (noOfTravellers >= MIN_TRAVELLERS_NUMBER && noOfTravellers <= MAX_TRAVELLERS_NUMBER) ? noOfTravellers : DEFAULT_TRAVELLERS_NUMBER;
     }
     
     /**
@@ -97,8 +108,8 @@ public class Trip
             this._departureDate = new Date(1, 1, 2000);
             this._returningDate = new Date(this._departureDate);
         } 
-        this._noOfCountries = (noOfCountries > 0 && noOfCountries <= 10) ? noOfCountries : 1;
-        this._noOfTravellers = (noOfTravellers > 0 && noOfTravellers <= 50) ? noOfTravellers : 10;
+        this._noOfCountries = (noOfCountries >= MIN_COUNTRIES_NUMBER && noOfCountries <= MAX_COUNTRIES_NUMBER) ? noOfCountries : MIN_COUNTRIES_NUMBER;
+        this._noOfTravellers = (noOfTravellers >= MIN_TRAVELLERS_NUMBER && noOfTravellers <= MAX_TRAVELLERS_NUMBER) ? noOfTravellers : DEFAULT_TRAVELLERS_NUMBER;
     }
 
     /**
@@ -161,7 +172,7 @@ public class Trip
      */
     public void setNoOfCountries(int otherNumberOfCountries )
     {
-        this._noOfCountries = (otherNumberOfCountries  > 0 && otherNumberOfCountries  <= 10) ? otherNumberOfCountries : this._noOfCountries;
+        this._noOfCountries = (otherNumberOfCountries >= MIN_COUNTRIES_NUMBER && otherNumberOfCountries  <= MAX_COUNTRIES_NUMBER) ? otherNumberOfCountries : this._noOfCountries;
     }
     
     /**
@@ -170,7 +181,7 @@ public class Trip
      */
     public void setNoOfTravellers(int otherNumberOfTravellers)
     {
-        this._noOfTravellers = (otherNumberOfTravellers  > 0 && otherNumberOfTravellers  <= 50) ? otherNumberOfTravellers : this._noOfTravellers;
+        this._noOfTravellers = (otherNumberOfTravellers > MIN_TRAVELLERS_NUMBER && otherNumberOfTravellers  <= MAX_TRAVELLERS_NUMBER) ? otherNumberOfTravellers : this._noOfTravellers;
     }
     
     /**
@@ -269,13 +280,16 @@ public class Trip
     }
     
     /**
-     * calculates total price of the trip according to days of the trip and number of countries visited
+     * calculates total price of the trip according to days of the trip and number of countries visited (20% extra price at the summer; July and August)
      * @return the total price of the trip
      */
     public int calculatePrice()
     {
-        return (this._departureDate.getMonth() == 7 || this._departureDate.getMonth() == 8) ?
-            (int)(1.20 * (this.tripDuration() * this.PRICE_PER_DAY + this._noOfCountries * this.PRICE_PER_COUNTRY + this.howManyWeekends() * this.PRICE_PER_WEEKEND)) :
+    	final int JULY = 7, AUGUST = 8;
+    	final double SUMMER_EXTRA_PRICE = 1.2;
+    	
+        return (this._departureDate.getMonth() == JULY || this._departureDate.getMonth() == AUGUST) ?
+            (int)(SUMMER_EXTRA_PRICE * (this.tripDuration() * this.PRICE_PER_DAY + this._noOfCountries * this.PRICE_PER_COUNTRY + this.howManyWeekends() * this.PRICE_PER_WEEKEND)) :
                 (this.tripDuration() * this.PRICE_PER_DAY) + (this._noOfCountries * this.PRICE_PER_COUNTRY + this.howManyWeekends() * this.PRICE_PER_WEEKEND);
     }
 
@@ -285,15 +299,12 @@ public class Trip
      */
     public int howManyWeekends()
     {
-        int count = 0;
         int dayOfDep = _departureDate.dayInWeek();
-        int dayOfRet = _returningDate.dayInWeek();
         int diff = _returningDate.difference(_departureDate);
-        count += diff / 7;
+        int count = diff / 7;
         if ((diff % 7) + dayOfDep > 6 || dayOfDep == 0)
             count++;
-        return count;
-        
+        return count;     
     }
     
     /**
@@ -308,10 +319,86 @@ public class Trip
         else if (tripDuration() + depDay > 7)
         {
             depDay = 7 - depDay;
-            return new Date(this._departureDate.getDay() + depDay, this._departureDate.getMonth(), this._departureDate.getYear());
+            return new Date(addDays(this._departureDate, depDay));
         }
         else
             return null;
+    }
+    
+    /**
+     * this method adds days to a date object (1-28 days), by the dates rules (leap year, months with different days etc.)
+     * @param date the date to add days to
+     * @param num the number of days we want to add to our date object
+     * @return a date object with the days added to it
+     */
+    private Date addDays(Date date, int num)
+    {
+    	final int JANUARY = 1, FEBRUARY = 2, APRIL = 4, JUNE = 6,
+    			SEPTEMBER = 9, NOVEMBER = 11, DECEMBER = 12;
+    	final int LEAP_FEB = 29, NON_LEAP_FEB = 28, MONTH_WITH_30_DAYS = 30, MAX_DAYS_IN_MONTH = 31, MIN_DAYS_IN_MONTH = 1;
+    	int day = date.getDay() + num;
+		int month = date.getMonth();
+		int year = date.getYear();
+    	if (num >= MIN_DAYS_IN_MONTH && num <= NON_LEAP_FEB) //if the user didn't stood our contract (num isn't between 1-28), there will be no change in the days
+    	{
+    		if (day > NON_LEAP_FEB)
+    		{
+    			if (month == FEBRUARY) //February is separated to 2 cases: leap year and not a leap year
+    			{
+    				if (this.isLeap(year)) //leap year
+    				{
+    					if (day > LEAP_FEB)
+    					{
+	    					month++;
+	    					day -= LEAP_FEB;
+    					}
+    				}
+    				
+    				else //not a leap year
+    				{
+    					if (day > NON_LEAP_FEB)
+    					{
+    						month++;
+    						day -= NON_LEAP_FEB;
+    					}
+    				}
+    			}
+    			
+    			else if (month == APRIL || month == JUNE || month == SEPTEMBER || month == NOVEMBER) //The months with only 30 days
+    			{
+    				if (day > MONTH_WITH_30_DAYS)
+    				{
+    					month++;
+    					day -= MONTH_WITH_30_DAYS;
+    				}
+    			}
+    			
+    			else //rest of the months
+    			{
+    				if (day > MAX_DAYS_IN_MONTH)
+    				{
+    					month++;
+    					day -= MAX_DAYS_IN_MONTH;
+    				}
+    				if (month > DECEMBER) //if December became January
+    				{
+    					year++;
+    					month = JANUARY;
+    				}
+    			}
+    		}
+    	}
+    	return new Date(day, month, year);
+    }
+    
+    /**
+     * a method that check if the year is leaped
+     * @param yearToCheck the year to check if leaped
+     * @return true if the year is leaped, otherwise returns false
+     */
+    private boolean isLeap(int yearToCheck)
+    {
+    	return (yearToCheck % 4 == 0 && yearToCheck % 100 != 0) || (yearToCheck % 400 == 0);
     }
     
     /**
