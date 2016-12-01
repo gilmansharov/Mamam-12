@@ -219,11 +219,11 @@ public class Date
     }
     
     /**
-     * a method that checks if a date is legal
+     * a method that checks if a date is valid
      * @param day the day in the date
      * @param month the month in the date
      * @param year the year in the date
-     * @return True if the date is Legal, otherwise return false
+     * @return True if the date is valid, otherwise return false
      */
     private boolean isValid(int day, int month, int year)
     {
