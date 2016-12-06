@@ -242,11 +242,12 @@ public class Trip
      */
     public boolean overlap(Trip otherTrip)
     {
-    	if (!this._departureDate.after(otherTrip._returningDate) &&
-    			!this._departureDate.before(otherTrip._departureDate))
+    	if (!this._departureDate.after(otherTrip._returningDate) && // // the current trip departure date is between
+    			!this._departureDate.before(otherTrip._departureDate)) // the other trip departure and returning dates
     		return true;
-    	else if (!otherTrip._returningDate.before(this._departureDate) &&
-    			!otherTrip._returningDate.after(this._returningDate))
+    	
+    	else if (!otherTrip._returningDate.before(this._departureDate) && // the other trip departure date is between
+    			!otherTrip._returningDate.after(this._returningDate)) // the current trip departure and returning dates
     		return true;
     	else
     		return false;
