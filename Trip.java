@@ -64,7 +64,7 @@ public class Trip
      */
     public Trip(java.lang.String name, int depDay, int depMonth, int depYear,  int retDay, int retMonth, int retYear,int noOfCountries, int noOfTravellers)
     {
-        this._name = (name != null) ? name : "";
+        this._name = new String(name);
         this._departureDate = new Date(depDay, depMonth, depYear);
         this._returningDate = new Date(retDay, retMonth, retYear);
         if (this._departureDate.after(this._returningDate))
@@ -82,7 +82,7 @@ public class Trip
      */
     public Trip(Trip otherTrip)
     {
-        this._name = otherTrip._name;
+        this._name = new String(otherTrip._name);
         this._noOfCountries = otherTrip._noOfCountries;
         this._noOfTravellers = otherTrip._noOfTravellers;
         this._departureDate = new Date(otherTrip._departureDate);
@@ -100,7 +100,7 @@ public class Trip
      */
     public Trip(java.lang.String name, Date depDate, Date retDate, int noOfCountries, int noOfTravellers)
     {
-        this._name = (name != null) ? name : "";
+        this._name = new String(name);
         this._departureDate = new Date(depDate);
         this._returningDate = new Date(retDate);
         if (this._departureDate.after(this._returningDate))
@@ -145,7 +145,7 @@ public class Trip
      */
     public Date getDepartureDate()
     {
-        return this._departureDate;
+        return new Date(this._departureDate);
     }
     
     /**
@@ -154,7 +154,7 @@ public class Trip
      */
     public Date getReturningDate()
     {
-        return this._returningDate;
+        return new Date(this._returningDate);
     }
 
     /**
@@ -163,7 +163,7 @@ public class Trip
      */
     public void setGuideName(String otherName)
     {
-        this._name = (otherName != null) ? otherName : this._name;
+        this._name = new String(otherName);
     }
 
     /**
@@ -363,33 +363,34 @@ public class Trip
     					}
     				}
     			}
+    		}
     			
-    			else if (month == APRIL || month == JUNE || month == SEPTEMBER || month == NOVEMBER) //The months with only 30 days
+    		else if (month == APRIL || month == JUNE || month == SEPTEMBER || month == NOVEMBER) //The months with only 30 days
+    		{
+    			if (day > MONTH_WITH_30_DAYS)
     			{
-    				if (day > MONTH_WITH_30_DAYS)
-    				{
-    					month++;
-    					day -= MONTH_WITH_30_DAYS;
-    				}
-    			}
-    			
-    			else //rest of the months
-    			{
-    				if (day > MAX_DAYS_IN_MONTH)
-    				{
-    					month++;
-    					day -= MAX_DAYS_IN_MONTH;
-    				}
-    				if (month > DECEMBER) //if December became January
-    				{
-    					year++;
-    					month = JANUARY;
-    				}
+    				month++;
+    				day -= MONTH_WITH_30_DAYS;
     			}
     		}
-    	}
-    	return new Date(day, month, year);
-    }
+    		
+   			else //rest of the months
+   			{
+   				if (day > MAX_DAYS_IN_MONTH)
+   				{
+   					month++;
+    				day -= MAX_DAYS_IN_MONTH;
+    			}
+    			if (month > DECEMBER) //if December became January
+    			{
+   					year++;
+   					month = JANUARY;
+   				}
+   			}
+    		return new Date(day, month, year);
+    	}		
+    	return new Date(date);
+   	}
     
     /**
      * a method that check if the year is leaped

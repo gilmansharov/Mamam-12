@@ -93,7 +93,7 @@ public class Date
     }
     
     /**
-     * Ssets the day (only if date remains valid)
+     * Sets the day (only if date remains valid)
      * @param dayToSet the day value to be set
      */
     public void setDay(int dayToSet)
@@ -125,7 +125,7 @@ public class Date
     /**
      * check if 2 dates are the same
      * @param other The Date to compare
-     * @return true if the Dates are equals, otherwise, returns false
+     * @return true if the Dates are the same, otherwise, returns false
      */
     public boolean equals(Date other) 
     {
