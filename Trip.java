@@ -246,8 +246,8 @@ public class Trip
     			!this._departureDate.before(otherTrip._departureDate)) // the other trip departure and returning dates
     		return true;
     	
-    	else if (!otherTrip._returningDate.before(this._departureDate) && // the other trip departure date is between
-    			!otherTrip._returningDate.after(this._returningDate)) // the current trip departure and returning dates
+    	else if (!otherTrip._returningDate.before(this._departureDate) && // the other trip returning date is between
+    			!otherTrip._returningDate.after(this._returningDate)) // the current trip returning and returning dates
     		return true;
     	else
     		return false;
