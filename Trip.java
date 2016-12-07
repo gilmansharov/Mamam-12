@@ -48,6 +48,7 @@ public class Trip
      */
     private final int MIN_TRAVELLERS_NUMBER = 1, MAX_TRAVELLERS_NUMBER = 50, DEFAULT_TRAVELLERS_NUMBER = 10,
     		MIN_COUNTRIES_NUMBER = 1, MAX_COUNTRIES_NUMBER = 10;
+    private final int DEFAULT_DAY = 1, DEFAULT_MONTH = 1, DEFAULT_YEAR = 2000;
     
     
     /**
@@ -69,7 +70,7 @@ public class Trip
         this._returningDate = new Date(retDay, retMonth, retYear);
         if (this._departureDate.after(this._returningDate))
         {
-            this._departureDate = new Date(1, 1, 2000);
+            this._departureDate = new Date(DEFAULT_DAY, DEFAULT_MONTH, DEFAULT_YEAR);
             this._returningDate = new Date(this._departureDate);
         } 
         this._noOfCountries = (noOfCountries >= MIN_COUNTRIES_NUMBER && noOfCountries <= MAX_COUNTRIES_NUMBER) ? noOfCountries : MIN_COUNTRIES_NUMBER;
@@ -105,7 +106,7 @@ public class Trip
         this._returningDate = new Date(retDate);
         if (this._departureDate.after(this._returningDate))
         {
-            this._departureDate = new Date(1, 1, 2000);
+            this._departureDate = new Date(DEFAULT_DAY, DEFAULT_MONTH, DEFAULT_YEAR);
             this._returningDate = new Date(this._departureDate);
         } 
         this._noOfCountries = (noOfCountries >= MIN_COUNTRIES_NUMBER && noOfCountries <= MAX_COUNTRIES_NUMBER) ? noOfCountries : MIN_COUNTRIES_NUMBER;
