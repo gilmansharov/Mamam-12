@@ -1,4 +1,4 @@
-/*
+/**
  * @author: Gil Mansharov
  * @ID: 313260192
  */ 
@@ -119,7 +119,7 @@ public class Trip
      */
     public String getGuideName()
     {
-        return this._name;
+        return new String(this._name);
     }
     
     /**
@@ -243,12 +243,20 @@ public class Trip
      */
     public boolean overlap(Trip otherTrip)
     {
-    	if (!this._departureDate.after(otherTrip._returningDate) && // // the current trip departure date is between
+    	if (!this._departureDate.after(otherTrip._returningDate) && // the current trip departure date is between
     			!this._departureDate.before(otherTrip._departureDate)) // the other trip departure and returning dates
     		return true;
     	
+    	else if (!this._returningDate.before(otherTrip._departureDate) && // the current trip returning date is between
+    			!this._returningDate.after(otherTrip._returningDate)) // the other trip departure and returning dates
+    		return true;
+    	
+    	else if (!otherTrip._departureDate.after(this._departureDate) && // the other trip departure date is between 
+    			!otherTrip._departureDate.before(this._returningDate)) // the current trip departure and returning dates
+    		return true;
+    	
     	else if (!otherTrip._returningDate.before(this._departureDate) && // the other trip returning date is between
-    			!otherTrip._returningDate.after(this._returningDate)) // the current trip returning and returning dates
+    			!otherTrip._returningDate.after(this._returningDate)) // the current trip departure and returning dates
     		return true;
     	else
     		return false;

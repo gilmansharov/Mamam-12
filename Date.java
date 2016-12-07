@@ -16,7 +16,7 @@ public class Date
 			SEPTEMBER = 9, NOVEMBER = 11, DECEMBER = 12;
 	//private final int MAY = 5, JULY = 7, AUGUST = 8, OCTOBER = 10		// these months aren't in use and that's the reason they were commented out 
 	private final int MAX_YEARS = 10000, MIN_YEARS = 1000;
-	private final int DEFAULT_YEAR = 2000;
+	private final int DEFAULT_YEAR = 2000, DEFAULT_MONTH = JANUARY, DEFAULT_DAY = 1;
 	private final int LEAP_FEB = 29, NON_LEAP_FEB = 28, MONTH_WITH_30_DAYS = 30, MAX_DAYS_IN_MONTH = 31, MIN_DAYS_IN_MONTH = 1;
 	
     /**
@@ -48,8 +48,8 @@ public class Date
     	}
     	else
     	{
-    		this._day = MIN_DAYS_IN_MONTH;
-    		this._month = JANUARY;
+    		this._day = DEFAULT_DAY;
+    		this._month = DEFAULT_MONTH;
     		this._year = DEFAULT_YEAR;
     	}
     }
@@ -204,7 +204,7 @@ public class Date
         int y = year % 100;
         int c = year / 100;
         
-        return ((this._day + (26 * (m+1))/10 + y + y/4 + c/4 - 2*c) % 7);
+        return ((this._day + (26 * (m+1))/10 + y + y/4 + c/4 - 2*c) % 7); //Formula for calculating day in week
     }
     
     /**
@@ -246,7 +246,7 @@ public class Date
      */
     public String toString()
     {
-        return this._day + "/" + this._month + "/" + this._year;
+        return new String(this._day + "/" + this._month + "/" + this._year);
     }
 
 }
