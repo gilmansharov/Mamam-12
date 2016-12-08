@@ -1,6 +1,6 @@
-/*
- * @author: Gil Mansharov
- * @ID: 313260192
+/**
+ * @author Gil Mansharov
+ * @ID 313260192
  */
 
 
@@ -15,8 +15,20 @@ public class Date
 	private final int JANUARY = 1, FEBRUARY = 2, MARCH = 3, APRIL = 4, JUNE = 6,
 			SEPTEMBER = 9, NOVEMBER = 11, DECEMBER = 12;
 	//private final int MAY = 5, JULY = 7, AUGUST = 8, OCTOBER = 10		// these months aren't in use and that's the reason they were commented out 
+	
+	/**
+	 * Limitations for the year variable
+	 */
 	private final int MAX_YEARS = 10000, MIN_YEARS = 1000;
+	
+	/**
+	 * Default Date parameters
+	 */
 	private final int DEFAULT_YEAR = 2000, DEFAULT_MONTH = JANUARY, DEFAULT_DAY = 1;
+		
+	/**
+	 * Different cases of months
+	 */
 	private final int LEAP_FEB = 29, NON_LEAP_FEB = 28, MONTH_WITH_30_DAYS = 30, MAX_DAYS_IN_MONTH = 31, MIN_DAYS_IN_MONTH = 1;
 	
     /**

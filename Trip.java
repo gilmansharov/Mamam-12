@@ -1,8 +1,7 @@
 /**
- * @author: Gil Mansharov
- * @ID: 313260192
- */ 
-
+ * @author Gil Mansharov
+ * @ID 313260192
+ */
 
 /**
  * This class represents a Trip object
@@ -44,10 +43,21 @@ public class Trip
     private final int PRICE_PER_WEEKEND = 100;
     
     /**
+     * Extra price for the summer (July and August) - 
+     * this parameter need to be multiplies by the trip's total price - 
+     * if and only if the departure date occurs at the summer
+     */
+    private final double SUMMER_EXTRA_PRICE = 1.2;
+    
+    /**
      * Travelers and Countries constants assignment
      */
     private final int MIN_TRAVELLERS_NUMBER = 1, MAX_TRAVELLERS_NUMBER = 50, DEFAULT_TRAVELLERS_NUMBER = 10,
     		MIN_COUNTRIES_NUMBER = 1, MAX_COUNTRIES_NUMBER = 10;
+    
+    /**
+     * Default Date parameters
+     */
     private final int DEFAULT_DAY = 1, DEFAULT_MONTH = 1, DEFAULT_YEAR = 2000;
     
     
@@ -65,7 +75,7 @@ public class Trip
      */
     public Trip(java.lang.String name, int depDay, int depMonth, int depYear,  int retDay, int retMonth, int retYear,int noOfCountries, int noOfTravellers)
     {
-        this._name = new String(name);
+    	this._name = (name != null) ? new String(name) : new String("");
         this._departureDate = new Date(depDay, depMonth, depYear);
         this._returningDate = new Date(retDay, retMonth, retYear);
         if (this._departureDate.after(this._returningDate))
@@ -83,7 +93,7 @@ public class Trip
      */
     public Trip(Trip otherTrip)
     {
-        this._name = new String(otherTrip._name);
+    	this._name = new String(otherTrip._name);
         this._noOfCountries = otherTrip._noOfCountries;
         this._noOfTravellers = otherTrip._noOfTravellers;
         this._departureDate = new Date(otherTrip._departureDate);
@@ -101,13 +111,13 @@ public class Trip
      */
     public Trip(java.lang.String name, Date depDate, Date retDate, int noOfCountries, int noOfTravellers)
     {
-        this._name = new String(name);
+        this._name = (name != null) ? new String(name) : new String("");
         this._departureDate = new Date(depDate);
         this._returningDate = new Date(retDate);
         if (this._departureDate.after(this._returningDate))
         {
             this._departureDate = new Date(DEFAULT_DAY, DEFAULT_MONTH, DEFAULT_YEAR);
-            this._returningDate = new Date(this._departureDate);
+            this._returningDate = new Date(DEFAULT_DAY, DEFAULT_MONTH, DEFAULT_YEAR);
         } 
         this._noOfCountries = (noOfCountries >= MIN_COUNTRIES_NUMBER && noOfCountries <= MAX_COUNTRIES_NUMBER) ? noOfCountries : MIN_COUNTRIES_NUMBER;
         this._noOfTravellers = (noOfTravellers >= MIN_TRAVELLERS_NUMBER && noOfTravellers <= MAX_TRAVELLERS_NUMBER) ? noOfTravellers : DEFAULT_TRAVELLERS_NUMBER;
@@ -164,7 +174,7 @@ public class Trip
      */
     public void setGuideName(String otherName)
     {
-        this._name = new String(otherName);
+        this._name = (otherName != null) ? new String(otherName) : new String("");
     }
 
     /**
@@ -296,7 +306,6 @@ public class Trip
     public int calculatePrice()
     {
     	final int JULY = 7, AUGUST = 8;
-    	final double SUMMER_EXTRA_PRICE = 1.2;
     	
         return (this._departureDate.getMonth() == JULY || this._departureDate.getMonth() == AUGUST) ?
             (int)(SUMMER_EXTRA_PRICE * (this.tripDuration() * this.PRICE_PER_DAY + this._noOfCountries * this.PRICE_PER_COUNTRY + this.howManyWeekends() * this.PRICE_PER_WEEKEND)) :
@@ -418,8 +427,8 @@ public class Trip
      */
     public String toString()
     {
-        return "TRIP:" + this._name + "|" + this._departureDate.toString() + "|" + 
-        this._returningDate.toString() + "|" + this._noOfCountries + "|" + this._noOfTravellers;
+        return new String("TRIP:" + this._name + "|" + this._departureDate.toString() + "|" + 
+        this._returningDate.toString() + "|" + this._noOfCountries + "|" + this._noOfTravellers);
     }
     
 }
