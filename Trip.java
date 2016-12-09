@@ -192,7 +192,7 @@ public class Trip
      */
     public void setNoOfTravellers(int otherNumberOfTravellers)
     {
-        this._noOfTravellers = (otherNumberOfTravellers > MIN_TRAVELLERS_NUMBER && otherNumberOfTravellers  <= MAX_TRAVELLERS_NUMBER) ? otherNumberOfTravellers : this._noOfTravellers;
+        this._noOfTravellers = (otherNumberOfTravellers >= MIN_TRAVELLERS_NUMBER && otherNumberOfTravellers  <= MAX_TRAVELLERS_NUMBER) ? otherNumberOfTravellers : this._noOfTravellers;
     }
     
     /**
